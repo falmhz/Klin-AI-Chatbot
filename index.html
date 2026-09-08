@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Klin AI Chat - Asisten percakapan cerdas yang ramah dan empatik." />
+    <title>Klin Chat</title>
+
+    <!-- Preconnect for faster font load -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Plus Jakarta Sans: refined, modern SaaS-grade typeface -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="style.css" />
+
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>"
+    />
+  </head>
+
+  <body>
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         WORKSPACE SHELL
+         Structure: fixed header / (sidebar + main chat area)
+    ═════════════════════════════════════════════════════════════════════ -->
+    <div class="workspace" id="workspace">
+
+      <!-- ── Global Header ─────────────────────────────────────────────── -->
+      <header class="global-header" role="banner">
+        <div class="header-left">
+          <!-- Sidebar toggle (visible on all widths) -->
+          <button
+            class="icon-btn sidebar-toggle"
+            id="sidebarToggle"
+            aria-label="Buka atau tutup sidebar"
+            aria-expanded="true"
+            aria-controls="sidebar"
+            title="Toggle Sidebar"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="3" y1="6"  x2="21" y2="6"  />
+              <line x1="3" y1="12" x2="21" y2="12" />
+              <line x1="3" y1="18" x2="21" y2="18" />
+            </svg>
+          </button>
+
+          <div class="header-brand">
+            <span class="brand-gem" aria-hidden="true">✦</span>
+            <div class="brand-copy">
+              <span class="brand-name">Klin Chat</span>
+              <span class="brand-tagline">Powered by Google AI</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="header-right">
+          <!-- Live connection status -->
+          <div class="status-badge" aria-live="polite" aria-label="Status koneksi server">
+            <span class="status-dot" id="statusDot"></span>
+            <span class="status-label" id="statusLabel">Online</span>
+          </div>
+
+          <!-- Settings button -->
+          <button
+            class="icon-btn"
+            id="settingsBtn"
+            aria-label="Buka pengaturan"
+            title="Settings"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3"/>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+            </svg>
+          </button>
+
+          <!-- New chat / reset -->
+          <button
+            class="icon-btn reset-btn"
+            id="resetBtn"
+            aria-label="Mulai percakapan baru"
+            title="New Chat"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            <span class="reset-label">New Chat</span>
+          </button>
+        </div>
+      </header>
+
+      <!-- ── Body (sidebar + main) ─────────────────────────────────────── -->
+      <div class="workspace-body">
+
+        <!-- ── Sidebar ─────────────────────────────────────────────────── -->
+        <aside
+          class="sidebar"
+          id="sidebar"
+          role="complementary"
+          aria-label="Panel samping"
+        >
+          <!-- Sidebar header -->
+          <div class="sidebar-header">
+            <span class="sidebar-eyebrow">Percakapan</span>
+          </div>
+
+          <!-- Session history list (populated by JS) -->
+          <nav class="sidebar-history" id="sidebarHistory" aria-label="Riwayat percakapan">
+            <!-- Empty history placeholder -->
+            <div class="sidebar-empty" id="sidebarEmpty">
+              <span class="sidebar-empty-icon" aria-hidden="true">💬</span>
+              <p>Belum ada riwayat</p>
+            </div>
+          </nav>
+
+          <!-- Divider -->
+          <div class="sidebar-divider" role="separator" aria-hidden="true"></div>
+
+          <!-- Preset / quick prompts -->
+          <div class="sidebar-section">
+            <span class="sidebar-eyebrow">Prompt Cepat</span>
+            <ul class="preset-list" role="list" aria-label="Prompt yang disarankan">
+              <li>
+                <button class="preset-item" data-prompt="Apa itu kecerdasan buatan dan bagaimana cara kerjanya?" role="listitem">
+                  <span class="preset-icon" aria-hidden="true">💡</span>
+                  <span>Kecerdasan Buatan</span>
+                </button>
+              </li>
+              <li>
+                <button class="preset-item" data-prompt="Bantu saya menulis email profesional untuk atasan saya." role="listitem">
+                  <span class="preset-icon" aria-hidden="true">✉️</span>
+                  <span>Email Profesional</span>
+                </button>
+              </li>
+              <li>
+                <button class="preset-item" data-prompt="Jelaskan cara kerja machine learning dengan analogi sederhana." role="listitem">
+                  <span class="preset-icon" aria-hidden="true">🧠</span>
+                  <span>Machine Learning</span>
+                </button>
+              </li>
+              <li>
+                <button class="preset-item" data-prompt="Berikan 5 tips produktivitas terbaik untuk developer." role="listitem">
+                  <span class="preset-icon" aria-hidden="true">⚡</span>
+                  <span>Tips Produktivitas</span>
+                </button>
+              </li>
+              <li>
+                <button class="preset-item" data-prompt="Ringkaskan konsep REST API dalam tiga paragraf singkat." role="listitem">
+                  <span class="preset-icon" aria-hidden="true">🔗</span>
+                  <span>REST API Ringkas</span>
+                </button>
+              </li>
+            </ul>
+          </div>
+
+          <!-- Sidebar footer -->
+          <div class="sidebar-footer">
+          <span class="sidebar-footer-text">Gemini 3.5 </span>
+          </div>
+        </aside>
+
+        <!-- ── Sidebar backdrop (mobile overlay) ─────────────────────── -->
+        <div class="sidebar-backdrop" id="sidebarBackdrop" aria-hidden="true"></div>
+
+        <!-- ── Main Chat Workspace ───────────────────────────────────── -->
+        <main class="chat-workspace" role="main" aria-label="Area percakapan utama">
+
+          <!-- Toast notification -->
+          <div
+            class="toast"
+            id="toast"
+            role="alert"
+            aria-live="assertive"
+            aria-atomic="true"
+            hidden
+          >
+            <span class="toast-icon" aria-hidden="true">⚠</span>
+            <span class="toast-message" id="toastMessage"></span>
+            <button class="toast-close" id="toastClose" aria-label="Tutup notifikasi">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+          </div>
+
+          <!-- Message feed -->
+          <section
+            class="chat-feed"
+            id="chatWindow"
+            role="log"
+            aria-label="Percakapan dengan Klin"
+            aria-live="polite"
+            aria-relevant="additions"
+          >
+            <!-- Empty state — hidden after first message -->
+            <div class="empty-state" id="emptyState">
+              <div class="empty-glow" aria-hidden="true"></div>
+              <div class="empty-icon" aria-hidden="true">✦</div>
+              <h2 class="empty-title">Halo, ada yang bisa saya bantu?</h2>
+              <p class="empty-body">
+                Tanyakan apa saja. Saya siap membantu dengan jelas dan ramah.
+              </p>
+
+              <!-- Suggestion chips -->
+              <div class="chip-grid" role="list" aria-label="Pertanyaan cepat">
+                <button class="chip" role="listitem" data-prompt="Apa itu kecerdasan buatan dan bagaimana cara kerjanya?">
+                  <span aria-hidden="true">💡</span> Kecerdasan buatan
+                </button>
+                <button class="chip" role="listitem" data-prompt="Bantu saya menulis email profesional untuk atasan saya.">
+                  <span aria-hidden="true">✉️</span> Email profesional
+                </button>
+                <button class="chip" role="listitem" data-prompt="Jelaskan cara kerja machine learning dengan analogi sederhana.">
+                  <span aria-hidden="true">🧠</span> Machine learning
+                </button>
+                <button class="chip" role="listitem" data-prompt="Berikan 5 tips produktivitas terbaik untuk developer.">
+                  <span aria-hidden="true">⚡</span> Tips produktivitas
+                </button>
+              </div>
+            </div>
+            <!-- Message rows injected here by script.js -->
+          </section>
+
+          <!-- Composer -->
+          <footer class="composer-zone" role="contentinfo">
+            <!-- Attachment preview strip (shown when a file is selected) -->
+            <div class="attachment-preview" id="attachmentPreview" hidden aria-live="polite">
+              <div class="attachment-chip" id="attachmentChip">
+                <span class="attachment-chip-icon" id="attachmentChipIcon" aria-hidden="true">📄</span>
+                <span class="attachment-chip-name" id="attachmentChipName">file.pdf</span>
+                <button class="attachment-chip-remove" id="attachmentRemoveBtn" aria-label="Hapus lampiran" title="Hapus lampiran">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+                </button>
+              </div>
+            </div>
+
+            <!-- Double-bezel outer wrapper -->
+            <div class="composer-bezel">
+              <form
+                class="composer-form"
+                id="chatForm"
+                novalidate
+                aria-label="Form kirim pesan"
+              >
+                <!-- File attachment button -->
+                <button
+                  type="button"
+                  class="attach-btn"
+                  id="attachBtn"
+                  aria-label="Lampirkan gambar atau PDF"
+                  title="Lampirkan file (Gambar / PDF)"
+                >
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                  </svg>
+                </button>
+                <!-- Hidden real file input -->
+                <input
+                  type="file"
+                  id="fileInput"
+                  accept="image/*,application/pdf"
+                  hidden
+                  aria-hidden="true"
+                  tabindex="-1"
+                />
+
+                <label for="userInput" class="sr-only">Ketik pesan Anda</label>
+                <textarea
+                  id="userInput"
+                  class="composer-input"
+                  placeholder="Kirim pesan kepada Klin..."
+                  rows="1"
+                  maxlength="4000"
+                  autocomplete="off"
+                  spellcheck="true"
+                  aria-label="Kotak pesan"
+                  aria-multiline="true"
+                ></textarea>
+
+                <button
+                  type="submit"
+                  class="send-btn"
+                  id="sendBtn"
+                  aria-label="Kirim pesan"
+                  title="Kirim (Enter)"
+                >
+                  <svg class="send-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+                    <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+                  </svg>
+                </button>
+              </form>
+            </div>
+
+            <!-- Keyboard shortcut hint -->
+            <p class="composer-hint">
+              <kbd>Enter</kbd> kirim &nbsp;·&nbsp; <kbd>Shift</kbd> + <kbd>Enter</kbd> baris baru
+            </p>
+          </footer>
+
+        </main>
+      </div><!-- /.workspace-body -->
+    </div><!-- /.workspace -->
+
+    <!-- ════════════════════════════════════════════════════════════════════
+         SETTINGS MODAL
+         Accessible dialog for API Key management and model selection.
+    ═════════════════════════════════════════════════════════════════════ -->
+    <div
+      class="settings-overlay"
+      id="settingsOverlay"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="settingsTitle"
+      hidden
+    >
+      <div class="settings-modal">
+        <!-- Modal header -->
+        <div class="settings-header">
+          <div class="settings-title-group">
+            <span class="settings-header-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+              </svg>
+            </span>
+            <h2 class="settings-title" id="settingsTitle">Pengaturan</h2>
+          </div>
+          <button class="icon-btn settings-close-btn" id="settingsCloseBtn" aria-label="Tutup pengaturan">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>
+          </button>
+        </div>
+
+        <!-- Modal body -->
+        <div class="settings-body">
+
+          <!-- API Key field -->
+          <div class="settings-field">
+            <label class="settings-label" for="apiKeyInput">
+              Google Gemini API Key
+            </label>
+            <div class="settings-input-wrap">
+              <input
+                type="password"
+                id="apiKeyInput"
+                class="settings-input"
+                placeholder="AIza..."
+                autocomplete="off"
+                spellcheck="false"
+                aria-describedby="apiKeyHint"
+              />
+              <button
+                type="button"
+                class="settings-eye-btn"
+                id="apiKeyToggleBtn"
+                aria-label="Tampilkan atau sembunyikan API Key"
+                title="Toggle visibility"
+              >
+                <!-- Eye open icon (shown when password is hidden) -->
+                <svg class="eye-icon eye-show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                  <circle cx="12" cy="12" r="3"/>
+                </svg>
+                <!-- Eye off icon (shown when password is visible) -->
+                <svg class="eye-icon eye-hide" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden>
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/>
+                  <line x1="1" y1="1" x2="23" y2="23"/>
+                </svg>
+              </button>
+            </div>
+            <p class="settings-hint" id="apiKeyHint">
+            </p>
+          </div>
+
+          <!-- Model selection -->
+          <div class="settings-field">
+            <label class="settings-label" for="modelSelect">
+              Model Gemini
+            </label>
+            <div class="settings-select-wrap">
+              <select id="modelSelect" class="settings-select" aria-label="Pilih model Gemini">
+                <option value="gemini-2.0-flash" selected>gemini-3.5-flash (Recommended)</option>
+                <option value="gemini-3.5-flash-lite">gemini-3.5-flash-lite (Faster)</option>
+              </select>
+              <span class="settings-select-arrow" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+              </span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Modal footer / actions -->
+        <div class="settings-footer">
+          <button type="button" class="settings-btn-secondary" id="settingsCancelBtn">
+            Batal
+          </button>
+          <button type="button" class="settings-btn-primary" id="settingsSaveBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="width:14px;height:14px;flex-shrink:0"><polyline points="20 6 9 17 4 12"/></svg>
+            Simpan Pengaturan
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

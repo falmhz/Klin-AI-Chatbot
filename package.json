@@ -1,0 +1,22 @@
+{
+  "name": "klin-chatbot",
+  "version": "1.0.0",
+  "description": "Full-stack AI chatbot powered by Google Gemini API with a polished Taste-Skill + Soft-Skill UI",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "@google/genai": "^1.52.0",
+    "cors": "^2.8.6",
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "author": "",
+  "license": "MIT"
+}
