@@ -84,7 +84,7 @@ Seluruh riwayat percakapan dikirim ke backend pada setiap request, memberikan mo
 ## Struktur Proyek
 
 ```
-Project-/
+Klin-AI-Chatbot/
 │
 ├── index.html          # SPA shell — seluruh UI (header, sidebar, chat, modal)
 ├── index.js            # Express server — POST /api/chat, static serving
