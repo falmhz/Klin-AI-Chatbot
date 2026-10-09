@@ -30,7 +30,7 @@ Antarmuka dua kolom (**Sidebar** + **Chat Canvas**) dengan desain sistem *Taste-
 
 ### Dynamic API Key Configuration
 Konfigurasi Google Gemini API Key langsung dari antarmuka web tanpa perlu menyentuh file server:
-- Modal **Pengaturan** (⚙️) dengan input `type="password"` dan tombol show/hide
+- Modal **Pengaturan** dengan input `type="password"` dan tombol show/hide
 - API Key disimpan aman di `localStorage` browser (`klin_api_key`)
 - **Fallback otomatis** ke `GEMINI_API_KEY` di file `.env` server jika field dikosongkan
 - Pilihan **model Gemini** dari dropdown (dapat diubah kapan saja)
@@ -76,8 +76,8 @@ Seluruh riwayat percakapan dikirim ke backend pada setiap request, memberikan mo
 ### Model Gemini yang Didukung
 | Model ID | Karakteristik |
 |---|---|
-| `gemini-3.5-flash` | ✅ Default — Cepat, kapabilitas tinggi, ketersediaan luas |
-| `gemini-3.5-flash-lite` | ⚡ Paling ringan dan tercepat |
+| `gemini-3.5-flash` |  Default  Cepat, kapabilitas tinggi, ketersediaan luas |
+| `gemini-3.5-flash-lite` | Paling ringan dan tercepat |
 
 ---
 
