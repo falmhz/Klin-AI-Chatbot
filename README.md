@@ -254,7 +254,7 @@ Endpoint utama untuk percakapan dengan model Gemini.
     { "role": "user",  "text": "Jelaskan apa itu machine learning." }
   ],
   "apiKey": "AIza...your_key (opsional)",
-  "model":  "gemini-2.0-flash (opsional)",
+  "model":  "gemini-3.5-flash (opsional)",
   "attachment": {
     "mimeType": "image/jpeg",
     "data":     "<base64_string_tanpa_prefix>",
