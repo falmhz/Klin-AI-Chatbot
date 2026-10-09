@@ -69,7 +69,7 @@ Seluruh riwayat percakapan dikirim ke backend pada setiap request, memberikan mo
 | Komponen | Teknologi |
 |---|---|
 | Markup | Vanilla HTML5 (Semantic, ARIA-compliant) |
-| Styling | Modern CSS — Design Tokens, Glassmorphism, CSS Custom Properties |
+| Styling | Modern CSS Design Tokens, Glassmorphism, CSS Custom Properties |
 | Logic | Vanilla JavaScript (ES2022+, Fetch API, FileReader, localStorage) |
 | Font | Plus Jakarta Sans (Google Fonts) |
 
